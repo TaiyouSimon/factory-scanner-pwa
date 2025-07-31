@@ -1,0 +1,169 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f2f5; /* A slightly darker background for contrast */
+  color: #333;
+  overscroll-behavior: none; /* Prevent pull-to-refresh */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Full viewport height */
+  padding: 20px; /* Add some padding around the app */
+}
+
+.app-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 500px; /* Max width for a typical app */
+  width: 100%;
+  min-height: 600px; /* Minimum height for the app container */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Hide overflow for rounded corners */
+}
+
+.scanner-page {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  flex-grow: 1; /* Allow it to take available space */
+  justify-content: space-between; /* Distribute content vertically */
+}
+
+h1 {
+  color: #2c3e50; /* Darker, more professional blue */
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.scanner-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  width: 100%;
+  justify-content: center;
+}
+
+button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px; /* Slightly more rounded corners */
+  font-weight: 600; /* Bolder font */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+  font-size: 1rem;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+.scan-button {
+  background-color: #3498db; /* A vibrant blue */
+  color: white;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+.scan-button:hover {
+  background-color: #2980b9;
+}
+
+.reload-button {
+  background-color: #ecf0f1; /* Light gray */
+  color: #34495e; /* Dark gray text */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.reload-button:hover {
+  background-color: #bdc3c7;
+}
+
+.scanner-container {
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden; /* Ensures the video feed respects border-radius */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+  color: #e74c3c; /* Red for errors */
+  background-color: #fdeded;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px; /* Slightly smaller loading area */
+  width: 100%;
+  color: #7f8c8d; /* Grayish color */
+  font-size: 1.1rem;
+}
+
+.last-scanned {
+  background-color: #e8f6fa; /* Light blue background */
+  padding: 15px;
+  border-radius: 8px;
+  margin: 20px 0;
+  width: 100%;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.data-info {
+  color: #7f8c8d; /* Grayish color */
+  font-size: 0.85rem;
+  margin-top: auto;
+  padding: 15px 0;
+  text-align: center;
+  width: 100%;
+  border-top: 1px solid #ecf0f1; /* Subtle separator */
+  padding-top: 20px;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+  .scanner-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* Hide html5-qrcode library's default UI elements we don't need */
+#html5qr-code-full-region__dashboard_section_csr button {
+  padding: 0.5rem 1rem;
+  margin: 0.25rem;
+}
+
+#html5qr-code-full-region__scan_region img {
+  max-width: 100%;
+  height: auto;
+}

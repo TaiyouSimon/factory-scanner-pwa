@@ -1,0 +1,20 @@
+{
+  "name": "Factory Scanner PWA",
+  "short_name": "Scanner",
+  "description": "Factory barcode scanner application",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "lang": "en",
+  "scope": "/",
+  "icons": [
+    { "src": "pwa-512x512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
