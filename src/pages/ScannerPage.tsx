@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import BarcodeScanner from "../components/BarcodeScanner";
 import { parseCSV, findMatchingRow } from "../services/csvService";
 import type { CsvRow } from "../services/csvService";
@@ -9,9 +9,19 @@ const ScannerPage = () => {
   const [lastScanned, setLastScanned] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>("");
+  const [cameraError, setCameraError] = useState<string>("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [scannerKey, setScannerKey] = useState(0);
+  const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     loadCsvData();
+
+    return () => {
+      if (processingTimeoutRef.current) {
+        clearTimeout(processingTimeoutRef.current);
+      }
+    };
   }, []);
 
   const loadCsvData = async () => {
@@ -28,32 +38,94 @@ const ScannerPage = () => {
     }
   };
 
-  const handleScan = (code: string) => {
+  const stopScanner = () => {
     setIsScanning(false);
+    setCameraError("");
+    setScannerKey((prev) => prev + 1);
+  };
+
+  const handleScan = async (code: string) => {
+    if (isProcessing) return;
+
+    setIsProcessing(true);
     setLastScanned(code);
+    setError("");
+    setCameraError("");
 
-    let zuban = code.substring(0, 8);
-    zuban = zuban.slice(0, 4) + "-" + zuban.slice(4);
+    try {
+      let zuban = code.substring(0, 8);
+      zuban = zuban.slice(0, 4) + "-" + zuban.slice(4);
 
-    const matchingRow = findMatchingRow(csvData, zuban);
+      const matchingRow = findMatchingRow(csvData, zuban);
 
-    if (matchingRow && matchingRow.URL) {
-      window.open(matchingRow.URL, "_blank");
-    } else {
-      setError(`No matching product found for code: ${zuban}`);
+      if (matchingRow && matchingRow.URL) {
+        stopScanner();
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        window.open(matchingRow.URL, "_blank");
+      } else {
+        setError(`No matching product found for code: ${zuban}`);
+        stopScanner();
+      }
+    } catch (err) {
+      console.error("Error processing scan:", err);
+      setError("Error processing barcode");
+      stopScanner();
+    } finally {
+      processingTimeoutRef.current = setTimeout(() => {
+        setIsProcessing(false);
+      }, 500);
+    }
+  };
+
+  const startScanner = async () => {
+    try {
+      console.log("Starting scanner...");
+
+      setError("");
+      setCameraError("");
+      setIsProcessing(false);
+
+      if (processingTimeoutRef.current) {
+        clearTimeout(processingTimeoutRef.current);
+        processingTimeoutRef.current = null;
+      }
+
+      if (isScanning) {
+        console.log("Stopping existing scanner...");
+        setIsScanning(false);
+        setScannerKey((prev) => prev + 1);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      console.log("Setting isScanning to true...");
+      setIsScanning(true);
+    } catch (err) {
+      console.error("Error starting scanner:", err);
+      setCameraError("Failed to start camera");
     }
   };
 
   const toggleScanner = () => {
-    setIsScanning(!isScanning);
-    if (!isScanning) {
-      setError("");
+    if (isScanning || isProcessing) {
+      stopScanner();
+      setIsProcessing(false);
+    } else {
+      startScanner();
     }
   };
 
   const reloadData = () => {
     loadCsvData();
   };
+
+  useEffect(() => {
+    if (isScanning) {
+      setError("");
+      setCameraError("");
+    }
+  }, [isScanning]);
 
   return (
     <div className="scanner-page">
@@ -69,16 +141,50 @@ const ScannerPage = () => {
             </button>
           </div>
 
+          {process.env.NODE_ENV === "development" && (
+            <div
+              className="debug-info"
+              style={{
+                padding: "10px",
+                background: "#f0f0f0",
+                margin: "10px 0",
+              }}
+            >
+              <p>isScanning: {isScanning.toString()}</p>
+              <p>isProcessing: {isProcessing.toString()}</p>
+              <p>scannerKey: {scannerKey}</p>
+              <p>csvData.length: {csvData.length}</p>
+            </div>
+          )}
+
           {isScanning && (
-            <BarcodeScanner onScan={handleScan} isScanning={isScanning} />
+            <div className="scanner-container">
+              <BarcodeScanner
+                key={scannerKey}
+                onScan={handleScan}
+                isScanning={isScanning}
+              />
+            </div>
           )}
 
           {error && <div className="error-message">{error}</div>}
+          {cameraError && (
+            <div className="error-message camera-error">{cameraError}</div>
+          )}
 
-          {lastScanned && !error && (
+          {isProcessing && (
+            <div className="processing-message">Processing barcode...</div>
+          )}
+
+          {lastScanned && !error && !isProcessing && (
             <div className="last-scanned">
               <p>Last scanned: {lastScanned}</p>
-              <p>Zuban: {lastScanned.substring(0, 8)}</p>
+              <p>
+                Zuban:{" "}
+                {lastScanned.substring(0, 8).slice(0, 4) +
+                  "-" +
+                  lastScanned.substring(0, 8).slice(4)}
+              </p>
             </div>
           )}
 
@@ -86,9 +192,23 @@ const ScannerPage = () => {
             <p>Loaded {csvData.length} products</p>
           </div>
 
-          {!isScanning && (
-            <button className="fab-button" onClick={toggleScanner}>
+          {!isScanning && !isProcessing && (
+            <button
+              className="fab-button"
+              onClick={toggleScanner}
+              disabled={isLoading}
+            >
               <img src="/camera-icon.svg" alt="Scan" />
+            </button>
+          )}
+
+          {isScanning && (
+            <button
+              className="stop-button"
+              onClick={toggleScanner}
+              disabled={isProcessing}
+            >
+              Stop Scanning
             </button>
           )}
         </>
