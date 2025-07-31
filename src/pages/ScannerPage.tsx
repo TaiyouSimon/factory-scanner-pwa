@@ -32,7 +32,8 @@ const ScannerPage = () => {
     setIsScanning(false);
     setLastScanned(code);
 
-    const zuban = code.substring(0, 8);
+    let zuban = code.substring(0, 8);
+    zuban = zuban.slice(0, 4) + "-" + zuban.slice(4);
 
     const matchingRow = findMatchingRow(csvData, zuban);
 
