@@ -90,13 +90,13 @@ const BarcodeScanner = ({ onScan, isScanning }: BarcodeScannerProps) => {
   };
 
   return (
-    <div className="scanner-container">
+    <>
       {error && <div className="error-message">{error}</div>}
       <div
         id={scannerContainerId}
         style={{ width: "100%", maxWidth: "500px", margin: "0 auto" }}
       />
-    </div>
+    </>
   );
 };
 

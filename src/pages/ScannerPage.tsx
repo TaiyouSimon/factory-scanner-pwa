@@ -141,30 +141,12 @@ const ScannerPage = () => {
             </button>
           </div>
 
-          {process.env.NODE_ENV === "development" && (
-            <div
-              className="debug-info"
-              style={{
-                padding: "10px",
-                background: "#f0f0f0",
-                margin: "10px 0",
-              }}
-            >
-              <p>isScanning: {isScanning.toString()}</p>
-              <p>isProcessing: {isProcessing.toString()}</p>
-              <p>scannerKey: {scannerKey}</p>
-              <p>csvData.length: {csvData.length}</p>
-            </div>
-          )}
-
           {isScanning && (
-            <div className="scanner-container">
-              <BarcodeScanner
-                key={scannerKey}
-                onScan={handleScan}
-                isScanning={isScanning}
-              />
-            </div>
+            <BarcodeScanner
+              key={scannerKey}
+              onScan={handleScan}
+              isScanning={isScanning}
+            />
           )}
 
           {error && <div className="error-message">{error}</div>}
