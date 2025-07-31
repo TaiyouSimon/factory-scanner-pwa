@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import BarcodeScanner from "../components/BarcodeScanner";
 import { parseCSV, findMatchingRow } from "../services/csvService";
 import type { CsvRow } from "../services/csvService";
@@ -29,18 +29,14 @@ const ScannerPage = () => {
   };
 
   const handleScan = (code: string) => {
-    // Stop scanning after successful scan
     setIsScanning(false);
     setLastScanned(code);
 
-    // Extract first 8 characters (zuban)
     const zuban = code.substring(0, 8);
 
-    // Find matching row in CSV
     const matchingRow = findMatchingRow(csvData, zuban);
 
     if (matchingRow && matchingRow.URL) {
-      // Redirect to the URL from the matching row
       window.open(matchingRow.URL, "_blank");
     } else {
       setError(`No matching product found for code: ${zuban}`);
@@ -67,9 +63,6 @@ const ScannerPage = () => {
       ) : (
         <>
           <div className="scanner-controls">
-            <button onClick={toggleScanner} className="scan-button">
-              {isScanning ? "Stop Scanning" : "Start Scanning"}
-            </button>
             <button onClick={reloadData} className="reload-button">
               Reload Data
             </button>
@@ -91,6 +84,12 @@ const ScannerPage = () => {
           <div className="data-info">
             <p>Loaded {csvData.length} products</p>
           </div>
+
+          {!isScanning && (
+            <button className="fab-button" onClick={toggleScanner}>
+              <img src="/camera-icon.svg" alt="Scan" />
+            </button>
+          )}
         </>
       )}
     </div>

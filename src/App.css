@@ -71,15 +71,7 @@ button:active {
   transform: scale(0.97);
 }
 
-.scan-button {
-  background-color: #3498db;
-  color: white;
-  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
-}
 
-.scan-button:hover {
-  background-color: #2980b9;
-}
 
 .reload-button {
   background-color: #ecf0f1;
@@ -142,6 +134,79 @@ button:active {
   width: 100%;
   border-top: 1px solid #ecf0f1;
   padding-top: 20px;
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #3498db;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+  z-index: 1000;
+  border: none;
+}
+
+.fab-button:hover {
+  background-color: #2980b9;
+}
+
+.fab-button img {
+  width: 30px;
+  height: 30px;
+  filter: invert(100%);
+}
+
+/* Tablet specific styles */
+@media (min-width: 768px) {
+  .app-container {
+    max-width: 700px;
+    min-height: 700px;
+  }
+
+  .scanner-page {
+    padding: 30px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  .scanner-controls {
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  button {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+  }
+
+  .error-message,
+  .last-scanned {
+    padding: 20px;
+    font-size: 1.2rem;
+  }
+
+  .fab-button {
+    width: 80px;
+    height: 80px;
+    bottom: 30px;
+    right: 30px;
+  }
+
+  .fab-button img {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 @media (max-width: 600px) {
