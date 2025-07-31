@@ -12,16 +12,14 @@ const BarcodeScanner = ({ onScan, isScanning }: BarcodeScannerProps) => {
   const scannerContainerId = "html5qr-code-full-region";
 
   useEffect(() => {
-    // Initialize scanner
     if (!scannerRef.current) {
       scannerRef.current = new Html5Qrcode(scannerContainerId);
     }
 
-    // Start or stop scanning based on isScanning prop
     const handleScanningState = async () => {
       try {
         if (isScanning) {
-          await stopScanner(); // Ensure scanner is stopped before starting
+          await stopScanner();
           await startScanner();
         } else if (scannerRef.current) {
           await stopScanner();
@@ -34,13 +32,12 @@ const BarcodeScanner = ({ onScan, isScanning }: BarcodeScannerProps) => {
 
     handleScanningState();
 
-    // Cleanup on component unmount or when dependencies change
     return () => {
       const cleanup = async () => {
         try {
           if (scannerRef.current?.isScanning) {
             await scannerRef.current.stop();
-            await new Promise((resolve) => setTimeout(resolve, 100)); // Ensure state is cleared
+            await new Promise((resolve) => setTimeout(resolve, 100));
           }
         } catch (err) {
           console.error("Error during cleanup:", err);
@@ -54,13 +51,11 @@ const BarcodeScanner = ({ onScan, isScanning }: BarcodeScannerProps) => {
     if (!scannerRef.current) return;
     if (scannerRef.current.isScanning) return;
 
-    // Add a small delay to ensure proper state transition
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     try {
       setError("");
       const qrCodeSuccessCallback = (decodedText: string) => {
-        // Only process if the code is exactly 14 characters long
         if (decodedText.length === 14) {
           onScan(decodedText);
         }

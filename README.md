@@ -15,13 +15,9 @@ A Progressive Web Application (PWA) for scanning barcodes in a factory environme
 ```bash
 # Install dependencies
 yarn install
-# or
-npm install
 
 # Start development server
 yarn dev
-# or
-npm run dev
 ```
 
 ## Building for Production
@@ -29,8 +25,6 @@ npm run dev
 ```bash
 # Build the application
 yarn build
-# or
-npm run build
 ```
 
 The built files will be in the `dist` directory.
@@ -40,19 +34,9 @@ The built files will be in the `dist` directory.
 The application expects a CSV file at `/public/data.csv` with the following columns:
 
 - `Drawing number`: The product code (zuban) to match against
-- `Product name`: Name of the product
-- `Client name`: Name of the client
 - `URL`: The URL to redirect to when a match is found
 
 Additional columns may be present but are not used by the application.
-
-## Deployment to Netlify
-
-1. Create a new site on Netlify
-2. Connect to your Git repository or upload the `dist` directory
-3. Set the build command to `yarn build` or `npm run build`
-4. Set the publish directory to `dist`
-5. Deploy the site
 
 ### Updating the CSV Data
 

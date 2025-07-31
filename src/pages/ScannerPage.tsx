@@ -11,7 +11,6 @@ const ScannerPage = () => {
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    // Load CSV data when component mounts
     loadCsvData();
   }, []);
 
