@@ -81,8 +81,6 @@ const ScannerPage = () => {
 
   const startScanner = async () => {
     try {
-      console.log("Starting scanner...");
-
       setError("");
       setCameraError("");
       setIsProcessing(false);
@@ -93,13 +91,11 @@ const ScannerPage = () => {
       }
 
       if (isScanning) {
-        console.log("Stopping existing scanner...");
         setIsScanning(false);
         setScannerKey((prev) => prev + 1);
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
 
-      console.log("Setting isScanning to true...");
       setIsScanning(true);
     } catch (err) {
       console.error("Error starting scanner:", err);
