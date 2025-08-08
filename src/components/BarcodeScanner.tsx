@@ -20,7 +20,7 @@ const BarcodeScanner = ({ onScan, isScanning }: BarcodeScannerProps) => {
       try {
         if (isScanning) {
           await stopScanner();
-          await startScanner;
+          await startScanner();
         } else if (scannerRef.current) {
           await stopScanner();
         }
